@@ -24,18 +24,12 @@ assign write_sel = instruction[11:7];
 // Sign extension
 assign imm = { {20{instruction[31]}}, instruction[31:20]};
 
-/******************************************************************************
-*                      Start Your Code Here
-******************************************************************************/
-
-// add any wire or reg variables you need here
 wire unused_instr_bits = &{1'b0, instruction[14:12], instruction[6:0]};
 wire [31:0] read_data1;
 wire [31:0] read_data2;
 wire [31:0] operand_B;
 assign operand_B = op_B_sel ? imm : read_data2;
 
-// Fill in port connections
 regFile regFile_inst (
   .clock(clock),
   .reset(reset),
@@ -49,7 +43,6 @@ regFile regFile_inst (
 );
 
 
-// Fill in port connections
 ALU alu_inst(
   .ALU_Control(ALU_Control),
   .operand_A(read_data1),

@@ -148,10 +148,6 @@ initial begin
     $display("Register %d: %h", x, dut.regFile_inst.reg_file[x]);
   end
 
-  /******************************
-  * Test more instructions here *
-  ******************************/
-
   check_reg(5'd0,  32'h00000000, "x0 is zero");
   check_reg(5'd11, 32'h00000001, "addi a1, zero, 1");
   check_reg(5'd12, 32'h00000002, "addi a2, zero, 2");

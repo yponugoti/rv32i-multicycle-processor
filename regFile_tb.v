@@ -2,16 +2,11 @@ module regFile_tb();
 
 reg clock, reset;
 
-/******************************************************************************
-*                      Start Your Code Here
-******************************************************************************/
-
 reg         wEn;
 reg  [31:0] write_data;
 reg  [4:0]  read_sel1, read_sel2, write_sel;
 wire [31:0] read_data1, read_data2;
 
-// Fill in port connections
 regFile uut (
   .clock(clock),
   .reset(reset),
@@ -79,8 +74,6 @@ initial begin
   read_sel1 = 5'd0;
   read_sel2 = 5'd0;
 
-
-  // Test reads and writes to the register file here
   read_regs(5'd0, 5'd1);
   check(read_data1, 32'h00000000, "reset: x0 == 0");
   check(read_data2, 32'h00000000, "reset: x1 == 0");
