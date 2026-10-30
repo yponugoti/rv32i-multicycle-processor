@@ -54,11 +54,6 @@ initial begin
   #10
   $display("ALU Result 4 < -1: %d",result);
 
-  // Add other test cases here
-  //
-  //
-  //
-
   check(ADD, 32'd0, 32'd0, 32'd0, "add 0 + 0");
   check(ADD, 32'd10, 32'hFFFFFFFF, 32'd9, "add 10 + (-1)");
   check(ADD, 32'hFFFFFFFE, 32'hFFFFFFFD, 32'hFFFFFFFB, "add -2 + -3 = -5");
