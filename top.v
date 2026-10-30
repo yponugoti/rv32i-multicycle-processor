@@ -3,38 +3,47 @@ module top (
   input reset,
 
   input [31:0] instruction,
-  input [5:0] ALU_Control,
-  input op_B_sel,
-  input wEn,
-
-  output [31:0] ALU_result
+  output [31:0] wb_data
 );
-
 
 wire [4:0] read_sel1;
 wire [4:0] read_sel2;
 wire [4:0] write_sel;
-
-wire [31:0] imm;
-
-assign read_sel1 = instruction[19:15];
-assign read_sel2 = instruction[24:20];
-assign write_sel = instruction[11:7];
-
-// Sign extension
-assign imm = { {20{instruction[31]}}, instruction[31:20]};
-
-wire unused_instr_bits = &{1'b0, instruction[14:12], instruction[6:0]};
+wire wEn;
+wire wb_sel;
+wire [31:0] imm32;
+wire op_B_sel;
+wire [5:0] ALU_Control;
+wire mem_wEn;
 wire [31:0] read_data1;
 wire [31:0] read_data2;
 wire [31:0] operand_B;
-assign operand_B = op_B_sel ? imm : read_data2;
+wire [31:0] ALU_result;
+wire [15:0] mem_address;
+wire [31:0] mem_read_data;
+assign operand_B = op_B_sel ? imm32 : read_data2;
+assign mem_address = ALU_result[15:0];
+assign wb_data = wb_sel ? mem_read_data : ALU_result;
+
+decode decode_inst (
+  .instruction(instruction),
+  .wb_sel(wb_sel),
+  .read_sel1(read_sel1),
+  .read_sel2(read_sel2),
+  .write_sel(write_sel),
+  .wEn(wEn),
+  .imm32(imm32),
+  .op_B_sel(op_B_sel),
+  .ALU_Control(ALU_Control),
+  .mem_wEn(mem_wEn)
+);
+
 
 regFile regFile_inst (
   .clock(clock),
   .reset(reset),
   .wEn(wEn), // Write Enable
-  .write_data(ALU_result),
+  .write_data(wb_data),
   .read_sel1(read_sel1),
   .read_sel2(read_sel2),
   .write_sel(write_sel),
@@ -50,6 +59,12 @@ ALU alu_inst(
   .ALU_result(ALU_result)
 );
 
+memory mem_inst (
+  .clock(clock),
+  .wEn(mem_wEn),
+  .address(mem_address),
+  .write_data(read_data2),
+  .read_data(mem_read_data)
+);
 
 endmodule
-
